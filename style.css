@@ -1,0 +1,59 @@
+* {
+    font-family: 'Cantarell', sans-serif;
+    color: #ffb464; /* Light orange text */
+    text-align: center;
+}
+
+body {
+    background-color: #502800; /* Dark brown */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+h1, h2, a {
+    color: #ff8000; /* Bright orange */
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+img {
+    border: 10px solid #a05000; /* Medium brown */
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+.horizontal {
+    display: flex;
+    gap: 50px;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+a {
+    font-size: 1.5rem;
+    text-decoration: none;
+    border: 2px solid #ff8000;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+a:hover {
+    background-color: #a05000;
+}
