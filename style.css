@@ -1,11 +1,11 @@
 * {
     font-family: 'Cantarell', sans-serif;
-    color: #ffb464; /* Light orange text */
+    color: #a6e3a1;
     text-align: center;
 }
 
 body {
-    background-color: #502800; /* Dark brown */
+    background-color: #1e1e2e;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -20,7 +20,7 @@ body {
 }
 
 h1, h2, a {
-    color: #ff8000; /* Bright orange */
+    color: #89b4fa;
 }
 
 h1 {
@@ -30,12 +30,6 @@ h1 {
 
 h2 {
     font-size: 2rem;
-}
-
-img {
-    border: 10px solid #a05000; /* Medium brown */
-    max-width: 600px;
-    margin: 20px auto;
 }
 
 .horizontal {
@@ -48,12 +42,12 @@ img {
 a {
     font-size: 1.5rem;
     text-decoration: none;
-    border: 2px solid #ff8000;
+    border: 2px solid #89b4fa;
     padding: 10px 20px;
     border-radius: 5px;
     margin-top: 20px;
 }
 
 a:hover {
-    background-color: #a05000;
+    background-color: #313244;
 }
