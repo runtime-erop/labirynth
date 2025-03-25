@@ -6,15 +6,17 @@ rows, cols = 20, 20
 cell = w // cols
 
 colors = {
-    'bg': (30, 30, 46),
+    'bg': (26, 27, 38),
     'wall': (137, 180, 250),
     'player': (245, 194, 231),
-    'text': (166, 227, 161)
+    'text': (166, 227, 161),
+    'strawberry': (255, 0, 0),
+    'outline': (255, 255, 255)
 }
 
 pg.init()
 screen = pg.display.set_mode((w, h))
-font = pg.font.SysFont('Arial', 30)
+font = pg.font.SysFont('Cantarell', 30)
 clock = pg.time.Clock()
 
 controls = {
@@ -26,47 +28,40 @@ controls = {
 key = None
 
 def make_maze():
+    global rows, cols
     grid = [[1]*cols for _ in range(rows)]
-    stack = [(random.randrange(rows//2)*2, random.randrange(cols//2)*2]
+    stack = [(random.randrange(rows//2)*2, random.randrange(cols//2)*2)]
     
     while stack:
-        x,y = stack[-1]
+        x, y = stack[-1]
         grid[x][y] = 0
         
         options = []
-        for dx,dy in [(-2,0),(2,0),(0,-2),(0,2)]:
-            nx,ny = x+dx,y+dy
-            if 0<=nx<rows and 0<=ny<cols and grid[nx][ny]:
-                options.append((nx,ny))
+        for dx, dy in [(-2,0), (2,0), (0,-2), (0,2)]:
+            nx, ny = x+dx, y+dy
+            if 0 <= nx < rows and 0 <= ny < cols and grid[nx][ny]:
+                options.append((nx, ny))
         
         if options:
-            nx,ny = random.choice(options)
+            nx, ny = random.choice(options)
             grid[(x+nx)//2][(y+ny)//2] = 0
-            stack.append((nx,ny))
+            stack.append((nx, ny))
         else:
             stack.pop()
     
     grid[rows-1][0] = grid[0][cols-1] = 0
     return grid
 
-def find_empty(x,y):
-    q = [(x,y)]
-    seen = set()
-    
-    while q:
-        cx,cy = q.pop(0)
-        if not maze[cx][cy]:
-            return [cx,cy]
-        
-        for dx,dy in [(-1,0),(1,0),(0,-1),(0,1)]:
-            nx,ny = cx+dx,cy+dy
-            if 0<=nx<rows and 0<=ny<cols and (nx,ny) not in seen:
-                q.append((nx,ny))
-                seen.add((nx,ny))
+def find_empty():
+    while True:
+        x, y = random.randint(0, rows - 1), random.randint(0, cols - 1)
+        if not maze[x][y]:
+            return [x, y]
 
 maze = make_maze()
 player = [rows-1, 0]
-shift_time = 5000
+strawberry = find_empty()
+shift_time = 11000
 last_shift = pg.time.get_ticks()
 last_move = 0
 
@@ -81,9 +76,14 @@ def draw():
     pg.draw.rect(screen, colors['player'], 
                 (player[1]*cell+cell//4, player[0]*cell+cell//4, cell//2, cell//2))
     
+    pg.draw.rect(screen, colors['strawberry'], 
+                (strawberry[1]*cell+cell//4, strawberry[0]*cell+cell//4, cell//2, cell//2))
+    
+    pg.draw.rect(screen, colors['outline'], (0, 0, w, h-47), 2)
+    
     time_left = max(0, shift_time - (pg.time.get_ticks() - last_shift))
-    timer = font.render(f"Shift in: {time_left//1000}", True, colors['text'])
-    screen.blit(timer, (10, 10))
+    timer = font.render(f"Shift: {time_left//1000}s", True, colors['text'])
+    screen.blit(timer, (250, 610))
     
     pg.display.flip()
 
@@ -100,10 +100,12 @@ while running:
             key = None
     
     if key and pg.time.get_ticks() - last_move > 100:
-        dx,dy = controls[key]
-        nx,ny = player[0]+dx, player[1]+dy
-        if 0<=nx<rows and 0<=ny<cols and not maze[nx][ny]:
-            player = [nx,ny]
+        dx, dy = controls[key]
+        nx, ny = player[0]+dx, player[1]+dy
+        if 0 <= nx < rows and 0 <= ny < cols and not maze[nx][ny]:
+            player = [nx, ny]
+            if player == strawberry:
+                strawberry = find_empty()
         last_move = pg.time.get_ticks()
     
     if pg.time.get_ticks() - last_shift > shift_time:
@@ -114,7 +116,9 @@ while running:
         
         maze = make_maze()
         if maze[player[0]][player[1]]:
-            player = find_empty(*player)
+            player = find_empty()
+        if maze[strawberry[0]][strawberry[1]]:
+            strawberry = find_empty()
         last_shift = pg.time.get_ticks()
     
     draw()
